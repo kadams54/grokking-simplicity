@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "coupon-mailer"
+version = "0.1.0"
+description = ""
+authors = ["Kyle Adams <kadams54@users.noreply.github.com>"]
+readme = "README.md"
+packages = [{include = "coupon_mailer"}]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+
+
+[tool.poetry.group.dev.dependencies]
+mypy = "^1.3.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
