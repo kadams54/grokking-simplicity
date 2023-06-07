@@ -52,7 +52,7 @@ def create_email(coupons: Iterable[Coupon]) -> Callable[[Person], Email]:
     def mapper(p: Person) -> Email:
         return {
             "to": p["email"],
-            "body": EMAIL_CONTENT.substitute(codes=", ".join(codes)),
+            "body": EMAIL_CONTENT.substitute(codes=codes),
         }
 
     return mapper
