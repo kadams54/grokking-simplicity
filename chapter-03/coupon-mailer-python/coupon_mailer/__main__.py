@@ -2,8 +2,10 @@
 
 import sys
 from string import Template
-from typing import Callable, TypedDict
+from typing import TypedDict
 from collections.abc import Iterable
+
+from pydash import py_
 
 
 class Person(TypedDict):
@@ -46,16 +48,15 @@ EMAIL_CONTENT = Template("Hello! Here are some coupons you might like: $codes")
 # ======================================================================
 
 
-def create_email(coupons: Iterable[Coupon]) -> Callable[[Person], Email]:
-    codes = ", ".join((c["coupon"] for c in coupons))
+def _create_email(coupons: Iterable[Coupon], p: Person) -> Email:
+    codes = py_(coupons).pluck("coupon").join(", ").value()
+    return {
+        "to": p["email"],
+        "body": EMAIL_CONTENT.substitute(codes=codes),
+    }
 
-    def mapper(p: Person) -> Email:
-        return {
-            "to": p["email"],
-            "body": EMAIL_CONTENT.substitute(codes=codes),
-        }
 
-    return mapper
+create_email = py_.curry(_create_email)
 
 
 def is_good(coupon: Coupon) -> bool:
@@ -83,16 +84,26 @@ def send(email: Email) -> None:
     print(f"📧 Sending: {email}")
 
 
-def main() -> int:
-    good_coupons = filter(is_good, COUPONS_TABLE)
-    create_good_email = create_email(good_coupons)
-    people_getting_good_coupons = filter(gets_good_coupons, PERSONS_TABLE)
-    good_emails = map(create_good_email, people_getting_good_coupons)
+def fetch_persons() -> Iterable[Person]:
+    return PERSONS_TABLE
 
-    best_coupons = filter(is_best, COUPONS_TABLE)
+
+def fetch_coupons() -> Iterable[Coupon]:
+    return COUPONS_TABLE
+
+
+def main() -> int:
+    good_coupons = py_(fetch_coupons()).filter(is_good).value()
+    create_good_email = create_email(good_coupons)
+    good_emails = (
+        py_(fetch_persons()).filter(gets_good_coupons).map(create_good_email).value()
+    )
+
+    best_coupons = py_(fetch_coupons()).filter(is_best).value()
     create_best_email = create_email(best_coupons)
-    people_getting_best_coupons = filter(gets_best_coupons, PERSONS_TABLE)
-    best_emails = map(create_best_email, people_getting_best_coupons)
+    best_emails = (
+        py_(fetch_persons()).filter(gets_best_coupons).map(create_best_email).value()
+    )
 
     for email in [*good_emails, *best_emails]:
         send(email)
