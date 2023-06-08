@@ -93,17 +93,16 @@ def fetch_coupons() -> Iterable[Coupon]:
 
 
 def main() -> int:
-    good_coupons = py_(fetch_coupons()).filter(is_good).value()
-    create_good_email = create_email(good_coupons)
-    good_emails = (
-        py_(fetch_persons()).filter(gets_good_coupons).map(create_good_email).value()
-    )
+    coupons = py_(fetch_coupons())
+    persons = py_(fetch_persons())
 
-    best_coupons = py_(fetch_coupons()).filter(is_best).value()
+    good_coupons = coupons.filter(is_good).value()
+    create_good_email = create_email(good_coupons)
+    good_emails = persons.filter(gets_good_coupons).map(create_good_email).value()
+
+    best_coupons = coupons.filter(is_best).value()
     create_best_email = create_email(best_coupons)
-    best_emails = (
-        py_(fetch_persons()).filter(gets_best_coupons).map(create_best_email).value()
-    )
+    best_emails = persons.filter(gets_best_coupons).map(create_best_email).value()
 
     for email in [*good_emails, *best_emails]:
         send(email)
