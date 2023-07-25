@@ -10,7 +10,9 @@ class Item(TypedDict):
 
 
 T = TypeVar("T")
-shopping_cart: list[Item] = []
+Cart = list[Item]
+shopping_cart: Cart = []
+
 
 def add_item_to_cart(name: str, price: float) -> None:
     global shopping_cart
@@ -22,7 +24,7 @@ def add_item_to_cart(name: str, price: float) -> None:
     update_tax_dom(total)
 
 
-def update_shipping_icons(cart: list[Item]) -> None:
+def update_shipping_icons(cart: Cart) -> None:
     buttons = get_buy_buttons_dom()
     for button in buttons:
         item = button.item
@@ -43,25 +45,22 @@ def add_element_last(array: list[T], item: T) -> list[T]:
     return new_array
 
 
-def add_item(cart: list[Item], item: Item) -> list[Item]:
+def add_item(cart: Cart, item: Item) -> Cart:
     return add_element_last(cart, item)
 
 
 def make_cart_item(name: str, price: float) -> Item:
-    return {
-        "name": name,
-        "price": price
-    }
+    return {"name": name, "price": price}
 
 
-def calc_total(cart: list[Item]) -> float:
+def calc_total(cart: Cart) -> float:
     total = 0
     for item in cart:
         total += item.price
     return total
 
 
-def gets_free_shipping(cart: list[Item]) -> bool:
+def gets_free_shipping(cart: Cart) -> bool:
     return calc_total(cart) >= 20
 
 
