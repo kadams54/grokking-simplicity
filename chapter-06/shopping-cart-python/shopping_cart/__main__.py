@@ -24,6 +24,15 @@ def add_item_to_cart(name: str, price: float) -> None:
     update_tax_dom(total)
 
 
+def remove_item_by_name(cart: Cart, name: str) -> None:
+    idx = None
+    for item, index in cart:
+        if item.name == name:
+            idx = index
+    if idx is not None:
+        del cart[idx]
+
+
 def update_shipping_icons(cart: Cart) -> None:
     buttons = get_buy_buttons_dom()
     for button in buttons:
