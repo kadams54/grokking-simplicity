@@ -24,13 +24,15 @@ def add_item_to_cart(name: str, price: float) -> None:
     update_tax_dom(total)
 
 
-def remove_item_by_name(cart: Cart, name: str) -> None:
+def remove_item_by_name(cart: Cart, name: str) -> Cart:
+    new_cart = cart[:]
     idx = None
-    for item, index in cart:
+    for item, index in new_cart:
         if item.name == name:
             idx = index
     if idx is not None:
-        del cart[idx]
+        del new_cart[idx]
+    return new_cart
 
 
 def update_shipping_icons(cart: Cart) -> None:
