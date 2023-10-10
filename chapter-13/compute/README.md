@@ -22,3 +22,15 @@ whatever-script.py`. Here are the current Python scripts:
 - `compute-with-pydash.py`: Uses [pydash](https://pydash.readthedocs.io/) to do
 the chaining.
 
+## JavaScript
+
+You should be able to invoke these with `node whatever-script.js`:
+
+- `compute.js`: Basic JavaScript, no extra libs.
+
+## Clojure
+
+You should be able to invoke these with `clojure -M  whatever-script.clj`:
+
+- `compute.clj`: Basic Clojure, no extra libs.
+
