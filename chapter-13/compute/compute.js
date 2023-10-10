@@ -11,6 +11,9 @@ function repeat(n, times) {
   return Array(times).fill(n);
 }
 
+// JS has a flatMap() that combines mapping with flattening. Flattening is what
+// reduce + this concat function would do, so we don't really need this
+// function in JS.
 function concat(list_a, list_b) {
   return [...list_a, ...list_b]
 }
